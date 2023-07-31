@@ -35,8 +35,8 @@ class OtpForm:
 
         # Generate random OTP
         self.random_otp = random.randint(111111, 999999)
-        # print("OTP sent to your registered mobile number.")  # Debug Only
-        print(self.random_otp)  # Debug Only
+        # See the OTP in console
+        # print(self.random_otp)  # Debug Only
 
         # Start - OTP Sender
         # ------------- Unlock during Actual Testing or Production --------------
@@ -114,7 +114,8 @@ class OtpForm:
     def resend_otp(self):
         # Generate random OTP
         self.random_otp = random.randint(111111, 999999)
-        print(self.random_otp)    # Debug Only
+        # See the OTP in console
+        # print(self.random_otp)    # Debug Only
 
         # START - OTP (RE-) Sender
         # ------------- Unlock during Actual Testing or Production --------------
