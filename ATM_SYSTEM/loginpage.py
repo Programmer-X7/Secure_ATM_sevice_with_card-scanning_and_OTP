@@ -57,7 +57,7 @@ class LoginForm:
         self.btnSendOtp.grid(row=0, column=0, padx=(0, 35))
         self.btnCancel.grid(row=0, column=1)
 
-    # START Barcode Scanner
+    # START Barcode/QR Code Scanner
     def scan_barcode(self):
         cap = cv2.VideoCapture(0)
         cap.set(3, 500)  # Camera frame width
@@ -74,7 +74,7 @@ class LoginForm:
                 cv2.rectangle(frame, (x_2, y_2), (x_2 + w_2, y_2 + h_2), (0, 255, 0),
                               2)  # Draw a green rectangle around the barcode
 
-            cv2.imshow("ATM Card Scanner", frame)
+            cv2.imshow("Card Scanner", frame)
 
             if cv2.waitKey(1) & 0xFF == 27 or scanned_data:  # Press 'Esc' or barcode detected to exit the loop
                 break
@@ -86,14 +86,8 @@ class LoginForm:
             self.cardnumberTextbox.delete(0, tk.END)
             self.cardnumberTextbox.insert(0, scanned_data)
         else:
-            messagebox.showinfo("ATM Card Scanner", "No barcode detected.")
+            messagebox.showinfo("Card Scanner", "No barcode detected.")
     # END of Barcode Scanner
-
-    # --------------- REMOVE -----------------
-    # Close Active Window
-    # def close_window(self):
-    #     self.master.destroy()
-    #     root.deiconify()
 
     # Destroy Active Window
     def close_window(self):
@@ -128,12 +122,6 @@ class LoginForm:
         else:
             messagebox.showwarning('Error', 'Enter a Valid Card Number & PIN')
     # END Validate Credentials Function
-
-    # -------------------- REMOVE ----------------------
-    # Destroy Active Window and Restore the main root window
-    # def on_close(self):
-    #     self.master.destroy()
-    #     root.deiconify()
 
 
 def main():

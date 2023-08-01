@@ -36,10 +36,11 @@ class OtpForm:
         # Generate random OTP
         self.random_otp = random.randint(111111, 999999)
         # See the OTP in console
-        # print(self.random_otp)  # Debug Only
+        print(self.random_otp)  # Debug Only
 
         # Start - OTP Sender
         # ------------- Unlock during Actual Testing or Production --------------
+
         # # Load environment variables from .env file
         # load_dotenv()
         #
@@ -115,10 +116,11 @@ class OtpForm:
         # Generate random OTP
         self.random_otp = random.randint(111111, 999999)
         # See the OTP in console
-        # print(self.random_otp)    # Debug Only
+        print(self.random_otp)    # Debug Only
 
         # START - OTP (RE-) Sender
         # ------------- Unlock during Actual Testing or Production --------------
+
         # # Fetch phone number using card number from the database
         # phoneNumber = self.fetch_phone_by_card(self.cardnumber)
         # # print(phoneNumber)    # Debug Only (type: <str>)
