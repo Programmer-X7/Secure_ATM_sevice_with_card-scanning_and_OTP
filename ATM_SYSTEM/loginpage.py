@@ -1,15 +1,22 @@
 import tkinter as tk
-from tkinter import messagebox
 from tkinter import ttk
-import mysql.connector
-from ATM_SYSTEM.otppage import OtpForm
+from tkinter import messagebox
 import cv2
 from pyzbar.pyzbar import decode as pyzbar_decode
-
-root = tk.Tk()
+import mysql.connector
+from cryptography.fernet import Fernet
+from decouple import config
+from ATM_SYSTEM.otppage import OtpForm
 
 
 class LoginForm:
+    CARD_ENCRYPTION_KEYS = {
+        config('CARDNUMBER_1'): config('ENCRYPTION_KEY_1'),
+        config('CARDNUMBER_2'): config('ENCRYPTION_KEY_2'),
+        config('CARDNUMBER_3'): config('ENCRYPTION_KEY_3'),
+        config('CARDNUMBER_4'): config('ENCRYPTION_KEY_4')
+    }
+
     def __init__(self, master):
         self.master = master
         self.master.title("Login Window")
@@ -98,6 +105,14 @@ class LoginForm:
         cardnumber = self.cardnumberTextbox.get()
         pin = self.pinTextbox.get()
 
+        encryption_key = self.CARD_ENCRYPTION_KEYS.get(cardnumber)
+
+        if encryption_key is None:
+            messagebox.showwarning('Error', 'Enter a Valid Card Number First')
+            return
+
+        cipher_suite = Fernet(encryption_key)
+
         # START Connection with DataBase
         with mysql.connector.connect(
                 host='localhost',
@@ -107,26 +122,41 @@ class LoginForm:
                 database='sas_bank_db'
         ) as connection:
             c = connection.cursor()
-            select_query = 'SELECT * FROM `account_holders` WHERE `cardnumber` = %s AND pin = %s'
-            vals = (cardnumber, pin,)
+            select_query = 'SELECT `pin` FROM `account_holders` WHERE `cardnumber` = %s'
+            vals = (cardnumber,)
             c.execute(select_query, vals)
-            user = c.fetchone()
+            encrypted_pin = c.fetchone()
         # END Connection with DataBase
 
-        # Check Credentials
-        if user is not None:
-            otpFormwindow = tk.Toplevel()
-            OtpForm(otpFormwindow, cardnumber)
-            self.master.withdraw()
-            otpFormwindow.protocol('WM_DELETE_WINDOW', self.close_window)
+        # Start Validate Credentials Function
+        if encrypted_pin is not None:
+            decrypted_pin = self.decrypt_pin(encrypted_pin[0], cipher_suite)
+            if decrypted_pin == pin:
+                otpFormwindow = tk.Toplevel()
+                OtpForm(otpFormwindow, cardnumber)
+                self.master.withdraw()
+                otpFormwindow.protocol('WM_DELETE_WINDOW', self.close_window)
+            else:
+                messagebox.showwarning('Error', 'Enter a Valid PIN')
         else:
-            messagebox.showwarning('Error', 'Enter a Valid Card Number & PIN')
+            messagebox.showwarning('Error', 'Enter a Valid Card Number First')
     # END Validate Credentials Function
+
+    # Decrypt PIN
+    @staticmethod
+    def decrypt_pin(encrypted_pin, cipher_suite):
+        try:
+            decrypted_pin = cipher_suite.decrypt(encrypted_pin.encode())
+            return decrypted_pin.decode()
+        except Exception as e:
+            print(f"Error decrypting PIN: {str(e)}")
+            return ''
 
 
 def main():
+    root = tk.Tk()
     LoginForm(root)
-    root.resizable(False, False)    # Prevent from resizing the window in both directions
+    root.resizable(False, False)  # Prevent from resizing the window in both directions
     root.mainloop()
 
 
