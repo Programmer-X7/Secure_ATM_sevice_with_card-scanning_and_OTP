@@ -16,10 +16,6 @@ class mainform:
         y = (hs - h) / 2
         self.master.geometry("%dx%d+%d+%d" % (w, h, x, y))
 
-        # Create Frame
-        self.frame = tk.Frame(self.master)
-        self.frame.pack()
-
         # Create Style
         self.master.config(bg="#2A2C2B")
         self.lbl = tk.Label(self.master, text='Home Page', font=('verdana', 50, 'bold'),

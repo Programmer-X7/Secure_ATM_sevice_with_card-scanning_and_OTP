@@ -1,3 +1,4 @@
+from ATM_SYSTEM.otppage import OtpForm
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
@@ -6,7 +7,6 @@ from pyzbar.pyzbar import decode as pyzbar_decode
 import mysql.connector
 from cryptography.fernet import Fernet
 from decouple import config
-from ATM_SYSTEM.otppage import OtpForm
 
 
 class LoginForm:
@@ -32,37 +32,34 @@ class LoginForm:
         y = (hs - h) / 2
         self.master.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
-        # Create styles
-        self.style = ttk.Style()
-        self.style.configure('TLabel', background='#fff', font=('Verdana', 16))
-        self.style.configure('TEntry', font=('Verdana', 12), width=20, borderwidth='2', relief='ridge')
-        self.style.configure('TButton', font=('Verdana', 12), padx=25, pady=10)
-
-        # Create widgets
-        self.frame = ttk.Frame(self.master)
-        self.btnsFrame = ttk.Frame(self.frame, padding=(40, 15))
-
-        self.windowTitle = ttk.Label(self.frame, text='Welcome', font=('Tahoma', 20), foreground='blue')
-        self.cardnumberLabel = ttk.Label(self.frame, text='Card Number:')
+        # # Create styles
+        self.master.config(bg="#2A2C2B")    # Body
+        self.title_lbl = tk.Label(self.master, text='WELCOME TO SAS BANK', font=('verdana', 20, 'bold'), fg='red', bg="#2A2C2B")    # Title
+        # Main Content Frame
+        self.frame = tk.Frame(self.master, background="#fff")
+        self.cardnumberLabel = ttk.Label(self.frame, text='Card Number:', background="#2A2C2B", foreground="#fff")
         self.cardnumberTextbox = ttk.Entry(self.frame)
-        self.pinLabel = ttk.Label(self.frame, text='PIN:')
+        self.btnScanBarcode = tk.Button(self.frame, text='Scan', fg="white", bg="red", command=self.scan_barcode)
+        self.pinLabel = ttk.Label(self.frame, text='PIN:', background="#2A2C2B", foreground="#fff")
         self.pinTextbox = ttk.Entry(self.frame, show='*')
+        # Button Frame
+        self.frame2 = tk.Frame(self.master, background="#fff")
+        self.btnSendOtp = tk.Button(self.frame2, text='Send OTP', fg='white', bg='red', command=self.otp_func)
+        self.btnCancel = tk.Button(self.frame2, text='Cancel', fg='white', bg='red', command=self.close_window)
 
-        self.btnScanBarcode = ttk.Button(self.btnsFrame, text='Scan', style='TButton', command=self.scan_barcode)
-        self.btnSendOtp = ttk.Button(self.btnsFrame, text='Send OTP', style='TButton', command=self.otp_func)
-        self.btnCancel = ttk.Button(self.btnsFrame, text='Cancel', style='TButton', command=self.close_window)
-
-        # Place widgets
-        self.frame.pack(fill='both', expand=True)
-        self.windowTitle.grid(row=0, column=1, columnspan=2, pady=(30, 20))
-        self.cardnumberLabel.grid(row=1, column=0)
-        self.cardnumberTextbox.grid(row=1, column=1)
-        self.pinLabel.grid(row=2, column=0, pady=(10, 0))
-        self.pinTextbox.grid(row=2, column=1, pady=(10, 0))
-        self.btnsFrame.grid(row=3, column=0, columnspan=2, pady=10)
-        self.btnScanBarcode.grid(row=1, column=2, padx=(0, 35))
-        self.btnSendOtp.grid(row=0, column=0, padx=(0, 35))
-        self.btnCancel.grid(row=0, column=1)
+        # Packing the frames
+        self.title_lbl.place(rely=0.1, relx=0.5, anchor=tk.N)   # Title
+        # Main Content Frame
+        self.frame.place(rely=0.5, relx=0.5, anchor=tk.CENTER)
+        self.cardnumberLabel.grid(row=1, column=1, padx=(0, 10), pady=(0, 10))
+        self.cardnumberTextbox.grid(row=1, column=2, padx=(10, 10), pady=(0, 10))
+        self.btnScanBarcode.grid(row=1, column=3, padx=(5, 0), pady=(0, 10))
+        self.pinLabel.grid(row=2, column=1)
+        self.pinTextbox.grid(row=2, column=2, padx=10, pady=10)
+        # Button Frame
+        self.frame2.place(rely=0.9, relx=0.5, anchor=tk.S)
+        self.btnSendOtp.grid(row=1, column=1, padx=10, pady=10)
+        self.btnCancel.grid(row=1, column=2, padx=10, pady=10)
 
     # START Barcode/QR Code Scanner
     def scan_barcode(self):
@@ -94,6 +91,7 @@ class LoginForm:
             self.cardnumberTextbox.insert(0, scanned_data)
         else:
             messagebox.showinfo("Card Scanner", "No barcode detected.")
+
     # END of Barcode Scanner
 
     # Destroy Active Window
@@ -138,9 +136,10 @@ class LoginForm:
                 otpFormwindow.protocol('WM_DELETE_WINDOW', self.close_window)
             else:
                 messagebox.showwarning('Error', 'Enter a Valid PIN')
-                self.pinTextbox.delete(0, 'end')    # Clear the contents of Pin entry box
+                self.pinTextbox.delete(0, 'end')  # Clear the contents of Pin entry box
         else:
             messagebox.showwarning('Error', 'Enter a Valid Card Number First')
+
     # END Validate Credentials Function
 
     # Decrypt PIN
@@ -157,7 +156,7 @@ class LoginForm:
 def main():
     root = tk.Tk()
     LoginForm(root)
-    root.resizable(False, False)  # Prevent from resizing the window in both directions
+    # root.resizable(False, False)  # Prevent from resizing the window in both directions
     root.mainloop()
 
 

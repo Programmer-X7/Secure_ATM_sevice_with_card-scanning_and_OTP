@@ -1,3 +1,4 @@
+from ATM_SYSTEM.homepage import mainform
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
@@ -6,9 +7,10 @@ import random
 from twilio.rest import Client
 import os
 from dotenv import load_dotenv
-from ATM_SYSTEM.homepage import mainform
 
 
+# ------------------------- Bugs --------------------------
+# 1. Entry of +, -, *, / and alphabets (a,b,c,d,....) will give error on console
 class OtpForm:
     def __init__(self, master, cardnumber):
         self.master = master
@@ -32,34 +34,22 @@ class OtpForm:
         # Disable window resizing
         self.master.resizable(False, False)
 
-        # Create & Pack Frame
-        self.frame = ttk.Frame(self.master)
-        self.frame.pack(fill='both')
+        # Style
+        self.master.config(bg="#2A2C2B")  # Body
+        # Main Content Frame
+        self.frame = tk.Frame(self.master, background="#2A2C2B")
+        self.otp_lebel = ttk.Label(self.frame, text='OTP:', background="#2A2C2B", foreground="#fff")
+        self.otp_textbox = ttk.Entry(self.frame, font=('Verdana', 12))
+        self.btn_login = tk.Button(self.frame, text='LOGIN', fg="white", bg="red", command=self.login_func)
+        self.btn_resend_otp = tk.Button(self.frame, text='Resend OTP', fg="white", bg="red", command=self.resend_otp)
 
-        # Create styles
-        style = ttk.Style()
-        style.configure('TLabel', background='#fff', font=('Verdana', 16))
-        style.configure('TEntry', font=('Verdana', 12), width=10, borderwidth='2', relief='ridge')
-        style.configure('TButton', font=('Verdana', 12), padx=25, pady=10)
-
-        # OTP Label
-        ttk.Label(self.frame, text='Login Window', style='TLabel').grid(row=0, column=0, columnspan=2)
-        ttk.Label(self.frame, text='OTP:', style='TLabel').grid(row=1, column=0, pady=(10, 0))
-
-        # OTP Entry
-        self.otp_textbox = ttk.Entry(self.frame, font=('Verdana', 12), style='TEntry')
-        self.otp_textbox.grid(row=1, column=1, pady=(10, 0))
-
-        # Buttons Frame
-        btns_frame = ttk.Frame(self.frame, padding=(40, 15))
-        btns_frame.grid(row=4, column=0, columnspan=2, pady=10)
-
-        # Login Button
-        ttk.Button(btns_frame, text='LOGIN', style='TButton', command=self.login_func).grid(row=0, column=0,
-                                                                                            padx=(0, 35))
-
-        # Resend OTP Button
-        ttk.Button(btns_frame, text='Resend OTP', style='TButton', command=self.resend_otp).grid(row=0, column=1)
+        # Pack
+        # Main Content Frame
+        self.frame.place(rely=0.5, relx=0.5, anchor=tk.CENTER)
+        self.otp_lebel.grid(row=1, column=1, padx=(0, 10), pady=(0, 10))
+        self.otp_textbox.grid(row=1, column=2, padx=(10, 0), pady=(0, 10))
+        self.btn_login.grid(row=2, column=1, padx=(0, 10), pady=(5, 5))
+        self.btn_resend_otp.grid(row=2, column=2, padx=(10, 0), pady=(5, 5))
 
         # Generate and send OTP
         self.send_otp()
