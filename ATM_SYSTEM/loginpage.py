@@ -138,6 +138,7 @@ class LoginForm:
                 otpFormwindow.protocol('WM_DELETE_WINDOW', self.close_window)
             else:
                 messagebox.showwarning('Error', 'Enter a Valid PIN')
+                self.pinTextbox.delete(0, 'end')    # Clear the contents of Pin entry box
         else:
             messagebox.showwarning('Error', 'Enter a Valid Card Number First')
     # END Validate Credentials Function
