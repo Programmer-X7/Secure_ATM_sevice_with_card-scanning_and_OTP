@@ -22,8 +22,8 @@ class LoginForm:
         self.master.title("Login Window")
 
         # Width and height
-        w = 630
-        h = 450
+        w = 580
+        h = 400
 
         # Center the window
         ws = self.master.winfo_screenwidth()
@@ -32,34 +32,34 @@ class LoginForm:
         y = (hs - h) / 2
         self.master.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
-        # # Create styles
-        self.master.config(bg="#2A2C2B")    # Body
-        self.title_lbl = tk.Label(self.master, text='WELCOME TO SAS BANK', font=('verdana', 20, 'bold'), fg='red', bg="#2A2C2B")    # Title
+        # Create styles
+        self.master.config(bg="#f2f2f2")    # Body
+        self.title_lbl = tk.Label(self.master, text='WELCOME TO SAS BANK', font=('verdana', 20, 'bold'), fg='#a345bf', bg="#f2f2f2")    # Title
         # Main Content Frame
-        self.frame = tk.Frame(self.master, background="#fff")
-        self.cardnumberLabel = ttk.Label(self.frame, text='Card Number:', background="#2A2C2B", foreground="#fff")
+        self.frame = tk.Frame(self.master, background="#f2f2f2")
+        self.cardnumberLabel = ttk.Label(self.frame, text='Card Number:', background="#f2f2f2", font=('verdana', 10, 'bold'))
         self.cardnumberTextbox = ttk.Entry(self.frame)
-        self.btnScanBarcode = tk.Button(self.frame, text='Scan', fg="white", bg="red", command=self.scan_barcode)
-        self.pinLabel = ttk.Label(self.frame, text='PIN:', background="#2A2C2B", foreground="#fff")
+        self.btnScanBarcode = ttk.Button(self.frame, text='Scan', command=self.scan_barcode)
+        self.pinLabel = ttk.Label(self.frame, text='PIN:', background="#f2f2f2", font=('verdana', 10, 'bold'))
         self.pinTextbox = ttk.Entry(self.frame, show='*')
         # Button Frame
-        self.frame2 = tk.Frame(self.master, background="#fff")
-        self.btnSendOtp = tk.Button(self.frame2, text='Send OTP', fg='white', bg='red', command=self.otp_func)
-        self.btnCancel = tk.Button(self.frame2, text='Cancel', fg='white', bg='red', command=self.close_window)
+        self.frame2 = tk.Frame(self.master, background="#f2f2f2")
+        self.btnSendOtp = tk.Button(self.frame2, text='Send OTP', fg='white', bg='#36d6d6', command=self.otp_func)
+        self.btnCancel = tk.Button(self.frame2, text='Cancel', fg='white', bg='#36d6d6', command=self.close_window)
 
         # Packing the frames
         self.title_lbl.place(rely=0.1, relx=0.5, anchor=tk.N)   # Title
         # Main Content Frame
-        self.frame.place(rely=0.5, relx=0.5, anchor=tk.CENTER)
+        self.frame.place(rely=0.5, relx=0.48, anchor=tk.CENTER)
         self.cardnumberLabel.grid(row=1, column=1, padx=(0, 10), pady=(0, 10))
         self.cardnumberTextbox.grid(row=1, column=2, padx=(10, 10), pady=(0, 10))
         self.btnScanBarcode.grid(row=1, column=3, padx=(5, 0), pady=(0, 10))
         self.pinLabel.grid(row=2, column=1)
         self.pinTextbox.grid(row=2, column=2, padx=10, pady=10)
         # Button Frame
-        self.frame2.place(rely=0.9, relx=0.5, anchor=tk.S)
-        self.btnSendOtp.grid(row=1, column=1, padx=10, pady=10)
-        self.btnCancel.grid(row=1, column=2, padx=10, pady=10)
+        self.frame2.place(rely=0.75, relx=0.51, anchor=tk.S)
+        self.btnSendOtp.grid(row=1, column=1, padx=7, pady=10)
+        self.btnCancel.grid(row=1, column=2, padx=9, pady=10)
 
     # START Barcode/QR Code Scanner
     def scan_barcode(self):
