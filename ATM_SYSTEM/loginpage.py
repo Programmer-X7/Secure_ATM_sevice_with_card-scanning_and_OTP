@@ -153,12 +153,8 @@ class LoginForm:
             return ''
 
 
-def main():
+if __name__ == '__main__':
     root = tk.Tk()
     LoginForm(root)
     # root.resizable(False, False)  # Prevent from resizing the window in both directions
     root.mainloop()
-
-
-if __name__ == '__main__':
-    main()

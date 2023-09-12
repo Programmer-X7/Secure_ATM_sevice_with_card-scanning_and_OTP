@@ -83,6 +83,12 @@ class OtpForm:
     def login_func(self):
         entered_otp = self.otp_textbox.get()
 
+        # Check if entered OTP is a valid integer
+        if not entered_otp.isdigit():
+            messagebox.showerror("Invalid OTP", "Please enter a valid OTP (numeric digits only).")
+            self.otp_textbox.delete(0, 'end')  # Clear the contents of the OTP entry box
+            return
+
         if int(entered_otp) == self.random_otp:
             if self.random_otp == "done":
                 messagebox.showinfo("showinfo", "Already Logged In")
@@ -124,12 +130,8 @@ class OtpForm:
             return None
 
 
-def main():
+if __name__ == '__main__':
     root = tk.Tk()
     OtpForm(root)
     root.resizable(False, False)  # Prevent resizing the window in both directions
     root.mainloop()
-
-
-if __name__ == '__main__':
-    main()
