@@ -9,8 +9,6 @@ import os
 from dotenv import load_dotenv
 
 
-# ------------------------- Bugs --------------------------
-# 1. Entry of +, -, *, / and alphabets (a,b,c,d,....) will give error on console
 class OtpForm:
     def __init__(self, master, cardnumber):
         self.master = master
@@ -62,7 +60,7 @@ class OtpForm:
         self.random_otp = random.randint(111111, 999999)
         print(self.random_otp)  # Debug Only
 
-        # ------------- Unlock during Actual Testing or Production --------------
+        # -------------- Unlock during Production --------------
         # # Fetch phone number using card number from the database
         # phone_number = self.fetch_phone_by_card(self.cardnumber)
         #

@@ -34,7 +34,7 @@ class LoginForm:
 
         # Create styles
         self.master.config(bg="#f2f2f2")    # Body
-        self.title_lbl = tk.Label(self.master, text='WELCOME TO SAS BANK', font=('verdana', 20, 'bold'), fg='#a345bf', bg="#f2f2f2")    # Title
+        self.title_lbl = tk.Label(self.master, text='WELCOME TO SAS BANK', font=('verdana', 20, 'bold'), fg='#1dbcbf', bg="#f2f2f2")    # Title
         # Main Content Frame
         self.frame = tk.Frame(self.master, background="#f2f2f2")
         self.cardnumberLabel = ttk.Label(self.frame, text='Card Number:', background="#f2f2f2", font=('verdana', 10, 'bold'))
