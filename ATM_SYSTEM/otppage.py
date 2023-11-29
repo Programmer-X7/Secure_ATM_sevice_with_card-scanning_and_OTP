@@ -1,15 +1,21 @@
 from ATM_SYSTEM.homepage import MainForm
 import tkinter as tk
-from tkinter import ttk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 import mysql.connector
 import random
 from twilio.rest import Client
 import os
 from dotenv import load_dotenv
 
+# Colors
+bg_color = "#fff"
+text_primary = "#2a78d1"
+btn_primary = "#387ed1"
+btn_secondary = "#1c589e"
+
 
 class OtpForm:
+
     def __init__(self, master, cardnumber):
         self.master = master
         self.cardnumber = cardnumber
@@ -33,20 +39,42 @@ class OtpForm:
         self.master.resizable(False, False)
 
         # Style
-        self.master.config(bg="#f2f2f2")  # Body
+        self.master.config(bg=bg_color)  # Body
         # Main Content Frame
-        self.frame = tk.Frame(self.master, background="#f2f2f2")
-        self.otp_lebel = ttk.Label(self.frame, text='OTP:', background="#f2f2f2", font=('Verdana', 11, 'bold'))
-        self.otp_textbox = ttk.Entry(self.frame, font=('Verdana', 12), width=15)
+        self.frame = tk.Frame(self.master, background=bg_color)
+        self.otp_label = ttk.Label(self.frame, text='OTP:', background=bg_color, foreground=text_primary, font=('Verdana', 11, 'bold'))
+        self.otp_textbox = ttk.Entry(self.frame, font=('TkDefaultFont', 10, 'bold'), width=20)
         # Button Frame
-        self.frame2 = tk.Frame(self.master, background="#f2f2f2")
-        self.btn_login = tk.Button(self.frame2, text='LOGIN', fg='white', bg='#36d6d6', command=self.login_func)
-        self.btn_resend_otp = tk.Button(self.frame2, text='Resend OTP', fg='white', bg='#36d6d6', command=self.resend_otp)
+        self.frame2 = tk.Frame(self.master, background=bg_color)
+        self.btn_login = tk.Button(
+            self.frame2,
+            text='LOGIN',
+            fg=bg_color,
+            bg=btn_primary,
+            width=8,
+            height=1,
+            activeforeground=bg_color,
+            activebackground=btn_secondary,
+            cursor='hand2',
+            font=('TkDefaultFont', 10, 'bold'),
+            command=self.login_func)
+        self.btn_resend_otp = tk.Button(
+            self.frame2,
+            text='Resend',
+            fg=bg_color,
+            bg=btn_primary,
+            width=8,
+            height=1,
+            activeforeground=bg_color,
+            activebackground=btn_secondary,
+            cursor='hand2',
+            font=('TkDefaultFont', 10, 'bold'),
+            command=self.resend_otp)
 
         # Pack
         # Main Content Frame
         self.frame.place(rely=0.4, relx=0.45, anchor=tk.CENTER)
-        self.otp_lebel.grid(row=1, column=1, padx=(0, 10), pady=(0, 10))
+        self.otp_label.grid(row=1, column=1, padx=(0, 10), pady=(0, 10))
         self.otp_textbox.grid(row=1, column=2, padx=(10, 0), pady=(0, 10))
         # Button Frame
         self.frame2.place(rely=0.65, relx=0.51, anchor=tk.S)
@@ -61,7 +89,7 @@ class OtpForm:
         print(self.random_otp)  # Debug Only
 
         # -------------- Unlock during Production --------------
-        # # Fetch phone number using card number from the database
+        # Fetch phone number using card number from the database
         # phone_number = self.fetch_phone_by_card(self.cardnumber)
         #
         # if phone_number:
