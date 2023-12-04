@@ -1,33 +1,42 @@
+# Dependencies
+# pip install tk pyzbar opencv-python mysql-connector-python cryptography python-decouple twilio python-dotenv pillow
+
 import tkinter as tk
-from tkinter import messagebox, ttk
+from tkinter import messagebox, ttk, PhotoImage
 from PIL import Image, ImageTk
 import mysql.connector
 
 # Colors
-# Background Colors
 bg_color = "#fff"
-bg_secondary = "#82a2e1"  # Sidebar BG
-# Nav Colors
-nav_bg = 'blue'
-nav_text = 'white'
-# Button Colors
+bg_secondary = "#99b3e8"  # Sidebar BG
+nav_bg = '#dce0e3'
+nav_text = '#000'
 btn_primary = "#387ed1"
 btn_secondary = "#1c589e"
-# Title Text Color
-title_color = '#2674f0'
-
-text_primary = "#2a78d1"
+label_color = '#2674f0'
 text_white = 'white'
+
+
+# Fonts
+# Family
+label_font = 'Times New Roman'
+btn_font = 'Ubuntu'
+entry_font = 'Times New Roman'
+# Size
+title_font_size = 20
+label_font_size = 14
+entry_font_size = 12
+btn_font_size = 10
 
 
 class MainForm:
     def __init__(self, root, cardnumber):
         self.root = root
         self.cardnumber = cardnumber
-        self.root.title("Banking Application")
+        self.root.title("ATM SERVICES")
 
         window_width = 700
-        window_height = 500
+        window_height = 480
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         x = (screen_width - window_width) // 2
@@ -53,10 +62,10 @@ class MainForm:
         ]
 
         for text, label_name in labels:
-            label = tk.Label(self.top_frame, text=text, font=('verdana', 12, 'bold'), bg=nav_bg, fg=nav_text)
+            label = tk.Label(self.top_frame, text=text, font=(label_font, label_font_size, 'bold'), bg=nav_bg, fg=nav_text)
             label.pack(side=tk.LEFT)
             setattr(self, label_name,
-                    tk.Label(self.top_frame, text="", font=('verdana', 12, 'bold'), bg=nav_bg, fg=nav_text))
+                    tk.Label(self.top_frame, text="", font=(label_font, label_font_size, 'bold'), bg=nav_bg, fg=nav_text))
             getattr(self, label_name).pack(side=tk.LEFT)
 
     def initialize_database_connection(self):
@@ -116,7 +125,7 @@ class MainForm:
                 activebackground=btn_secondary,
                 activeforeground=text_white,
                 cursor='hand2',
-                font=('TkDefaultFont', 10, 'bold'),
+                font=(btn_font, btn_font_size, 'bold'),
                 command=lambda
                 text=button_text: self.change_content(text))
             button.pack(side=tk.TOP, fill=tk.X, padx=10, pady=17)
@@ -143,14 +152,13 @@ class MainForm:
             self.logout()
 
     def display_initial_content(self):
-        # Add code to display the initial content
         initial_content_label = tk.Label(
             self.dynamic_frame,
             text="Dear Customer,"
                  "\nChoose a Transaction to Proceed",
-            font=("Verdana", 14, "bold"),
+            font=(label_font, title_font_size, "bold"),
             bg=bg_color,
-            fg=title_color,
+            fg=label_color,
         )
         initial_content_label.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
 
@@ -158,9 +166,9 @@ class MainForm:
         title_label = tk.Label(
             self.dynamic_frame,
             text="CASH WITHDRAWAL",
-            font=("Verdana", 14, "bold"),
+            font=(label_font, title_font_size, "bold"),
             bg=bg_color,
-            fg=title_color
+            fg=label_color
         )
         title_label.pack(pady=20)
 
@@ -168,15 +176,16 @@ class MainForm:
             self.dynamic_frame,
             text="AMOUNT",
             bg=bg_color,
-            fg=title_color,
-            font=("Verdana", 10, "bold")
+            fg=label_color,
+            font=(label_font, label_font_size, "bold")
         )
         amount_label.pack(pady=8)
 
         self.amount_entry = ttk.Entry(
             self.dynamic_frame,
-            font=("Verdana", 12, 'bold'),
+            font=(entry_font, entry_font_size, 'bold'),
             width=18,
+            justify='center',
         )
         self.amount_entry.pack()
 
@@ -189,7 +198,7 @@ class MainForm:
             height=1,
             activebackground=btn_secondary,
             activeforeground=text_white,
-            font=("TkDefaultFont", 10, 'bold'),
+            font=(btn_font, btn_font_size, 'bold'),
             cursor='hand2',
             command=self.perform_withdraw
         )
@@ -199,37 +208,38 @@ class MainForm:
         title_label = tk.Label(
             self.dynamic_frame,
             text="CASH DEPOSIT",
-            font=("Verdana", 14, "bold"),
+            font=(label_font, title_font_size, "bold"),
             bg=bg_color,
-            fg=title_color)
+            fg=label_color)
         title_label.pack(pady=20)
 
         deposit_amount_label = tk.Label(
             self.dynamic_frame,
             text="AMOUNT",
             bg=bg_color,
-            fg=title_color,
-            font=("Verdana", 10, "bold")
+            fg=label_color,
+            font=(label_font, label_font_size, "bold")
         )
         deposit_amount_label.pack(pady=8)
 
         self.deposit_amount_entry = ttk.Entry(
             self.dynamic_frame,
-            font=("Verdana", 12),
+            font=(entry_font, entry_font_size),
             width=18,
+            justify='center',
         )
         self.deposit_amount_entry.pack()
 
         deposit_button = tk.Button(
             self.dynamic_frame,
             text="DEPOSIT",
-            bg=text_primary,
+            bg=label_color,
             fg=text_white,
             width=12,
             height=1,
             activebackground=btn_secondary,
             activeforeground=text_white,
-            font=("TkDefaultFont", 10, 'bold'),
+            font=(btn_font, btn_font_size, 'bold'),
             cursor='hand2',
             command=self.perform_deposit
         )
@@ -239,25 +249,24 @@ class MainForm:
         title_label = tk.Label(
             self.dynamic_frame,
             text="QR CASH",
-            font=("Verdana", 18, "bold"),
+            font=(label_font, title_font_size, "bold"),
             bg=bg_color,
-            fg=title_color,
+            fg=label_color,
         )
-
         title_label.pack(pady=20)
 
         qrcode_scan_label = tk.Label(
             self.dynamic_frame,
             text="SCAN QR CODE",
             bg=bg_color,
-            fg=text_primary,
-            font=("Verdana", 10, "bold")
+            fg=label_color,
+            font=(label_font, label_font_size, "bold")
         )
         qrcode_scan_label.pack(pady=14)
 
         try:
             # QR Code Image using Pillow
-            photo = Image.open('qrcode.png')
+            photo = Image.open('assets/qrcode.png')
             resized_image = photo.resize((150, 150), Image.LANCZOS)
             converted_image = ImageTk.PhotoImage(resized_image)
 
@@ -276,13 +285,13 @@ class MainForm:
         deposit_button = tk.Button(
             self.dynamic_frame,
             text="CONFIRM",
-            bg=text_primary,
+            bg=label_color,
             fg=text_white,
             width=15,
             height=1,
             activebackground=btn_secondary,
             activeforeground=text_white,
-            font=("TkDefaultFont", 10, 'bold'),
+            font=(btn_font, btn_font_size, 'bold'),
             cursor='hand2',
             command=self.perform_qr_cash
         )
@@ -292,9 +301,9 @@ class MainForm:
         title_label = tk.Label(
             self.dynamic_frame,
             text="MONEY TRANSFER",
-            font=("Verdana", 16, "bold"),
+            font=(label_font, title_font_size, "bold"),
             bg=bg_color,
-            fg=title_color
+            fg=label_color
         )
         title_label.pack(pady=20)
 
@@ -310,16 +319,17 @@ class MainForm:
                 self.dynamic_frame,
                 text=text,
                 bg=bg_color,
-                fg=text_primary,
-                font=("Verdana", 10, "bold")
+                fg=label_color,
+                font=(label_font, label_font_size, "bold")
             )
             label.pack(pady=7)
 
             if entry_name:
                 entry = ttk.Entry(
                     self.dynamic_frame,
-                    font=("Verdana", 12, 'bold'),
+                    font=(entry_font, entry_font_size, 'bold'),
                     width=20,
+                    justify='center',
                 )
                 entry.pack()
                 setattr(self, entry_name, entry)
@@ -327,13 +337,13 @@ class MainForm:
         transfer_button = tk.Button(
             self.dynamic_frame,
             text="Transfer",
-            bg=text_primary,
+            bg=label_color,
             fg=text_white,
             width=14,
             height=1,
             activebackground=btn_secondary,
             activeforeground=text_white,
-            font=("TkDefaultFont", 10, 'bold'),
+            font=(btn_font, btn_font_size, 'bold'),
             cursor='hand2',
             command=self.perform_transfer
         )
@@ -343,9 +353,9 @@ class MainForm:
         title_label = tk.Label(
             self.dynamic_frame,
             text="MINI STATEMENT",
-            font=("Verdana", 14, "bold"),
+            font=(label_font, title_font_size, "bold"),
             bg=bg_color,
-            fg=title_color,
+            fg=label_color,
         )
         title_label.pack(pady=20)
 
@@ -353,8 +363,8 @@ class MainForm:
             self.dynamic_frame,
             text="SELECT ACCOUNT TYPE",
             bg=bg_color,
-            fg=title_color,
-            font=("Verdana", 10, "bold")
+            fg=label_color,
+            font=(label_font, label_font_size, "bold")
         )
         amount_label.pack(pady=12)
 
@@ -370,7 +380,7 @@ class MainForm:
                 height=1,
                 activebackground=btn_secondary,
                 activeforeground=text_white,
-                font=("TkDefaultFont", 10, 'bold'),
+                font=(btn_font, btn_font_size, 'bold'),
                 cursor='hand2',
                 command=self.perform_mini_statement
             )
@@ -380,9 +390,9 @@ class MainForm:
         title_label = tk.Label(
             self.dynamic_frame,
             text="Change Your PIN",
-            font=("Verdana", 14, "bold"),
+            font=(label_font, title_font_size, "bold"),
             bg=bg_color,
-            fg=title_color
+            fg=label_color
         )
         title_label.pack(pady=20)
 
@@ -397,16 +407,17 @@ class MainForm:
                 self.dynamic_frame,
                 text=text,
                 bg=bg_color,
-                fg=text_primary,
-                font=("Verdana", 10, "bold")
+                fg=label_color,
+                font=(label_font, label_font_size, "bold")
             )
             label.pack(pady=7)
 
             if entry_name:
                 entry = ttk.Entry(
                     self.dynamic_frame,
-                    font=("Verdana", 12, 'bold'),
+                    font=(entry_font, entry_font_size, 'bold'),
                     width=20,
+                    justify='center',
                 )
                 entry.pack()
                 setattr(self, entry_name, entry)
@@ -414,13 +425,13 @@ class MainForm:
         change_pin_button = tk.Button(
             self.dynamic_frame,
             text="Change PIN",
-            bg=text_primary,
+            bg=label_color,
             fg=text_white,
             width=14,
             height=1,
             activebackground=btn_secondary,
             activeforeground=text_white,
-            font=("TkDefaultFont", 10, 'bold'),
+            font=(btn_font, btn_font_size, 'bold'),
             cursor='hand2',
             command=self.perform_change_pin
         )
@@ -448,8 +459,8 @@ class MainForm:
                 text="Transaction Complete."
                      "\n\nPlease Collect the Cash",
                 bg=bg_color,
-                fg=title_color,
-                font=('TkDefaultFont', 17, 'bold'),
+                fg=label_color,
+                font=(label_font, title_font_size, 'bold'),
             )
             transaction_label.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
         else:
@@ -490,20 +501,18 @@ class MainForm:
             return
 
         current_balance = self.get_current_balance(self.cardnumber)
-
-        # Deposit the amount by adding it to the current balance
         new_balance = current_balance + deposit_amount
         self.update_balance(self.cardnumber, new_balance)
         self.balance_var.set(f"{new_balance:.2f}")
-
         self.clear_dynamic_frame()
+
         transaction_label = tk.Label(
             self.dynamic_frame,
             text="Deposit Complete."
                  "\n\nThank you!",
             bg=bg_color,
-            fg=title_color,
-            font=('TkDefaultFont', 17, 'bold'),
+            fg=label_color,
+            font=(label_font, title_font_size, 'bold'),
         )
         transaction_label.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
 
@@ -515,8 +524,8 @@ class MainForm:
                  "Please Collect the Cash"
                  "\n\nThank you!",
             bg=bg_color,
-            fg=title_color,
-            font=('TkDefaultFont', 17, 'bold'),
+            fg=label_color,
+            font=(label_font, title_font_size, 'bold'),
         )
         transaction_label.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
 
@@ -527,8 +536,8 @@ class MainForm:
             text="Transaction Completed."
                  "\n\nThank you!",
             bg=bg_color,
-            fg=title_color,
-            font=('TkDefaultFont', 17, 'bold'),
+            fg=label_color,
+            font=(label_font, title_font_size, 'bold'),
         )
         transaction_label.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
 
@@ -540,8 +549,8 @@ class MainForm:
                  "\nCollect the Receipt"
                  "\n\nThank you!",
             bg=bg_color,
-            fg=title_color,
-            font=('TkDefaultFont', 17, 'bold'),
+            fg=label_color,
+            font=(label_font, title_font_size, 'bold'),
         )
         mini_statement_label.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
 
@@ -552,8 +561,8 @@ class MainForm:
             text="PIN Changed Successfully."
                  "\n\nThank you!",
             bg=bg_color,
-            fg=title_color,
-            font=('TkDefaultFont', 17, 'bold'),
+            fg=label_color,
+            font=(label_font, title_font_size, 'bold'),
         )
         transaction_label.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
 

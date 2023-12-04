@@ -1,3 +1,6 @@
+# Dependencies
+# pip install tk pyzbar opencv-python mysql-connector-python cryptography python-decouple twilio python-dotenv pillow
+
 from ATM_SYSTEM.homepage import MainForm
 import tkinter as tk
 from tkinter import messagebox, ttk
@@ -9,24 +12,32 @@ from dotenv import load_dotenv
 
 # Colors
 bg_color = "#fff"
-text_primary = "#2a78d1"
+text_color = "#2a78d1"
 btn_primary = "#387ed1"
 btn_secondary = "#1c589e"
 
+# Fonts
+# Family
+label_font = 'Times New Roman'
+btn_font = 'Ubuntu'
+entry_font = 'Times New Roman'
+# Size
+title_font_size = 23
+label_font_size = 14
+entry_font_size = 12
+btn_font_size = 10
+
 
 class OtpForm:
-
     def __init__(self, master, cardnumber):
         self.master = master
         self.cardnumber = cardnumber
         self.random_otp = None
-
-        # Initialize the OTP window
         self.init_otp_window()
 
     def init_otp_window(self):
         self.master.geometry('700x450')
-        self.master.title('OTP Window')
+        self.master.title('ATM SERVICES')
 
         # Center the window
         ws = self.master.winfo_screenwidth()
@@ -34,18 +45,34 @@ class OtpForm:
         x = (ws - 450) / 2
         y = (hs - 280) / 2
         self.master.geometry(f'450x280+{int(x)}+{int(y)}')
-
-        # Disable window resizing
         self.master.resizable(False, False)
 
         # Style
         self.master.config(bg=bg_color)  # Body
         # Main Content Frame
-        self.frame = tk.Frame(self.master, background=bg_color)
-        self.otp_label = ttk.Label(self.frame, text='OTP:', background=bg_color, foreground=text_primary, font=('Verdana', 11, 'bold'))
-        self.otp_textbox = ttk.Entry(self.frame, font=('TkDefaultFont', 10, 'bold'), width=20)
+        self.frame = tk.Frame(
+            self.master,
+            background=bg_color
+        )
+        self.otp_label = ttk.Label(
+            self.frame,
+            text='OTP:',
+            background=bg_color,
+            foreground=text_color,
+            font=(label_font, label_font_size, 'bold')
+        )
+        self.otp_textbox = ttk.Entry(
+            self.frame,
+            font=(entry_font, entry_font_size, 'bold'),
+            width=20,
+            justify="center"
+        )
+
         # Button Frame
-        self.frame2 = tk.Frame(self.master, background=bg_color)
+        self.frame2 = tk.Frame(
+            self.master,
+            background=bg_color
+        )
         self.btn_login = tk.Button(
             self.frame2,
             text='LOGIN',
@@ -56,8 +83,9 @@ class OtpForm:
             activeforeground=bg_color,
             activebackground=btn_secondary,
             cursor='hand2',
-            font=('TkDefaultFont', 10, 'bold'),
-            command=self.login_func)
+            font=(btn_font, btn_font_size, 'bold'),
+            command=self.login_func
+        )
         self.btn_resend_otp = tk.Button(
             self.frame2,
             text='Resend',
@@ -68,8 +96,9 @@ class OtpForm:
             activeforeground=bg_color,
             activebackground=btn_secondary,
             cursor='hand2',
-            font=('TkDefaultFont', 10, 'bold'),
-            command=self.resend_otp)
+            font=(btn_font, btn_font_size, 'bold'),
+            command=self.resend_otp
+        )
 
         # Pack
         # Main Content Frame
@@ -81,15 +110,14 @@ class OtpForm:
         self.btn_login.grid(row=1, column=1, padx=7, pady=10)
         self.btn_resend_otp.grid(row=1, column=2, padx=9, pady=10)
 
-        # Generate and send OTP
         self.send_otp()
 
+    # Generate and send OTP
     def send_otp(self):
         self.random_otp = random.randint(111111, 999999)
-        print(self.random_otp)  # Debug Only
+        # print(self.random_otp)  # Debug
 
         # -------------- Unlock during Production --------------
-        # Fetch phone number using card number from the database
         # phone_number = self.fetch_phone_by_card(self.cardnumber)
         #
         # if phone_number:
@@ -112,7 +140,7 @@ class OtpForm:
         # Check if entered OTP is a valid integer
         if not entered_otp.isdigit():
             messagebox.showerror("Invalid OTP", "Please enter a valid OTP (numeric digits only).")
-            self.otp_textbox.delete(0, 'end')  # Clear the contents of the OTP entry box
+            self.otp_textbox.delete(0, 'end')
             return
 
         if int(entered_otp) == self.random_otp:
@@ -122,18 +150,18 @@ class OtpForm:
                 self.random_otp = "done"
                 mainformwindow = tk.Toplevel()
                 MainForm(mainformwindow, self.cardnumber)
-                self.master.withdraw()  # Hide the OTP form window
+                self.master.withdraw()
                 self.master.protocol('WM_DELETE_WINDOW', self.on_close)
         else:
             messagebox.showinfo("showinfo", "Wrong OTP")
-            self.otp_textbox.delete(0, 'end')  # Clear the contents of the OTP entry box
+            self.otp_textbox.delete(0, 'end')
 
     def on_close(self):
-        self.master.destroy()  # Close the OTP_form window
+        self.master.destroy()
 
     def resend_otp(self):
         self.send_otp()
-        self.otp_textbox.delete(0, 'end')  # Clear the contents of the OTP entry box
+        self.otp_textbox.delete(0, 'end')
 
     @staticmethod
     def fetch_phone_by_card(cardnumber):
